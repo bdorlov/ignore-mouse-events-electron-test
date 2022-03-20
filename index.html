@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html style="width: 100%; height: 100%;">
+   <head>
+      <meta charset = "UTF-8">
+      <title>Hello World!</title>
+      <style>
+         h1 {
+            color: white;
+         }
+         div#coords {
+            font-size: 100px;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 100px;
+         }
+
+         #btn {
+            margin: 10px;
+            padding: 20px;
+            background-color: rgb(61, 61, 159);
+            border-radius: 10px;
+            color: white;
+            font-size: 25px;
+         }
+      </style>
+   </head>
+   
+   <body id="body" style="width: 100%; height: 100%;">
+      <h1>Testing setIgnoreMouseEvents</h1>
+      <button id="btn">Forward is active</button>
+      <div id="list"></div>
+      <div id="coords"></div>
+
+      <script>
+         const { ipcRenderer } = window.electron;
+
+         window.electron.listen((event, arg) => {
+            if (arg) {
+               btn.textContent = 'Forward is active';
+            } else {
+               btn.textContent = 'Forward isn\'t active';
+            }
+         });
+
+         btn.addEventListener('click', () => {
+            //list.innerHTML += '<span>clicked</span><br>';
+            ipcRenderer.send('toggle-forward');
+         });
+         body.addEventListener('mousemove', event => {
+            coords.innerHTML = `${event.clientX} - ${event.clientY}`;
+         });
+         btn.addEventListener('mouseenter', () => {
+            ipcRenderer.send('change-ignoring', true);
+         });
+         btn.addEventListener('mouseleave', () => {
+            ipcRenderer.send('change-ignoring', false);
+         });
+      </script>
+   </body>
+</html>
